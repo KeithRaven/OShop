@@ -30,6 +30,9 @@ namespace OShop.Handlers {
         public void OrderDetailCreated(IContent order, OrderDetailRecord createdDetail) {
         }
 
+        public void OrderProcessing(IContent order) {
+        }
+
         public void OrderDetailDeleted(IContent order, OrderDetailRecord deletedDetail) {
         }
 

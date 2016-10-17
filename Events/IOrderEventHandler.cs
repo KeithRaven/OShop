@@ -5,6 +5,7 @@ using OShop.Models;
 namespace OShop.Events {
     public interface IOrderEventHandler : IEventHandler {
         void OrderCreated(IContent order);
+        void OrderProcessing(IContent order);
         void OrderCompleted(IContent order);
         void OrderCanceled(IContent order);
         void OrderDetailCreated(IContent order, OrderDetailRecord createdDetail);

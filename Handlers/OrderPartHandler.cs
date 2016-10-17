@@ -76,6 +76,9 @@ namespace OShop.Handlers {
                         case OrderStatus.Completed:
                             orderEventHandler.OrderCompleted(context.ContentItem);
                             break;
+                        case OrderStatus.Processing:
+                            orderEventHandler.OrderProcessing(context.ContentItem);
+                            break;
                     }
                 }
             });
