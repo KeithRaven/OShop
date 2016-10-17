@@ -1,26 +1,31 @@
 ﻿@model OShop.Models.CustomerPart
 
-<fieldset>
-    <legend>@T("Your details")</legend>
-    <div class="form-group">
-        @Html.LabelFor(m => m.FirstName, T("First name").Text, new { @class = "required form-control" })
-        @Html.TextBoxFor(m => m.FirstName, new { @class = "text medium" })
-        @Html.ValidationMessageFor(m => m.FirstName, "*")
+<div class="row">
+    <div class="col-xs-12 col-sm-6">
+        <fieldset>
+            <legend>@T("Your details")</legend>
+            <div class="form-group">
+                @Html.LabelFor(m => m.FirstName, T("First name").Text, new { @class = "required" })
+                @Html.TextBoxFor(m => m.FirstName, new { @class = "text medium form-control" })
+                @Html.ValidationMessageFor(m => m.FirstName, "*")
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.LastName, T("Last name").Text, new { @class = "required" })
+                @Html.TextBoxFor(m => m.LastName, new { @class = "text medium form-control" })
+                @Html.ValidationMessageFor(m => m.LastName, "*")
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Email, T("Email").Text, new { @class = "required" })
+                @if (Model.User == null) {
+                    @Html.TextBoxFor(m => m.Email, new { @class = "text medium form-control" })
+                    @Html.ValidationMessageFor(m => m.Email, "*")
+                }
+                else {
+                    @Html.TextBoxFor(m => m.Email, new { @class = "text medium form-control" })
+                    @Html.ValidationMessageFor(m => m.Email, "*")
+                }
+            </div>
+        </fieldset>
     </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.LastName, T("Last name").Text, new { @class = "required form-control" })
-        @Html.TextBoxFor(m => m.LastName, new { @class = "text medium" })
-        @Html.ValidationMessageFor(m => m.LastName, "*")
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.Email, T("Email").Text, new { @class = "required form-control" })
-        @if (Model.User == null) {
-            @Html.TextBoxFor(m => m.Email, new { @class = "text medium" })
-            @Html.ValidationMessageFor(m => m.Email, "*")
-        }
-        else {
-            @Html.TextBoxFor(m => m.Email, new { @class = "text medium required form-control" })
-            @Html.ValidationMessageFor(m => m.Email, "*")
-        }
-    </div>
-</fieldset>
+</div>
+
