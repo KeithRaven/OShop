@@ -1,4 +1,5 @@
-﻿using Orchard;
+﻿using System;
+using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
 using OShop.Events;
@@ -8,6 +9,7 @@ namespace OShop.Handlers {
     [OrchardFeature("OShop.Stocks")]
     public class StocksOrderEventHandler : IDependency, IOrderEventHandler {
         private readonly IContentManager _contentManager;
+        private readonly OrderStatus _inOrderStockAllocationStatus = OrderStatus.Processing;
 
         public StocksOrderEventHandler(IContentManager contentManager) {
             _contentManager = contentManager;
@@ -17,6 +19,9 @@ namespace OShop.Handlers {
         }
 
         public void OrderCompleted(IContent order) {
+        }
+
+        public void OrderProcessing(IContent order) {
         }
 
         public void OrderCreated(IContent order) {
@@ -30,7 +35,11 @@ namespace OShop.Handlers {
                     return;
                 }
                 else if(orderPart.OrderStatus < OrderStatus.Completed) {
-                    stockPart.InOrderQty += createdDetail.Quantity;
+
+                    if (orderPart.OrderStatus >= _inOrderStockAllocationStatus) {
+                        stockPart.InOrderQty += createdDetail.Quantity;
+                    }
+                    
                 }
                 else {
                     stockPart.InStockQty -= createdDetail.Quantity;
@@ -46,7 +55,11 @@ namespace OShop.Handlers {
                     return;
                 }
                 else if (orderPart.OrderStatus < OrderStatus.Completed) {
-                    stockPart.InOrderQty -= deletedDetail.Quantity;
+
+                    if (orderPart.OrderStatus >= _inOrderStockAllocationStatus) {
+                        stockPart.InOrderQty -= deletedDetail.Quantity;
+                    }
+
                 }
                 else {
                     stockPart.InStockQty += deletedDetail.Quantity;
@@ -63,7 +76,11 @@ namespace OShop.Handlers {
                         // OrderStatus changed
                         if (orderPart.OriginalStatus == OrderStatus.Canceled) {
                             if(orderPart.OrderStatus < OrderStatus.Completed) {
-                                stockPart.InOrderQty += updatedDetail.Quantity;
+
+                                if (orderPart.OrderStatus >= _inOrderStockAllocationStatus) {
+                                    stockPart.InOrderQty += updatedDetail.Quantity;
+                                }
+
                             }
                             else {
                                 stockPart.InStockQty -= updatedDetail.Quantity;
@@ -71,20 +88,53 @@ namespace OShop.Handlers {
                         }
                         else if (orderPart.OriginalStatus < OrderStatus.Completed) {
                             if (orderPart.OrderStatus == OrderStatus.Canceled) {
-                                stockPart.InOrderQty -= originalDetail.Quantity;
+
+                                //deallocate previously allocated stock as now cancelled
+                                if (orderPart.OriginalStatus >= _inOrderStockAllocationStatus) {
+                                    stockPart.InOrderQty -= originalDetail.Quantity;
+                                }
                             }
                             else if (orderPart.OrderStatus == OrderStatus.Completed) {
-                                stockPart.InOrderQty -= originalDetail.Quantity;
-                                stockPart.InStockQty -= updatedDetail.Quantity;
+
+                                //deallocated previously allocated stock and now taken form stock
+                                if (orderPart.OriginalStatus >= _inOrderStockAllocationStatus) {
+                                    stockPart.InOrderQty -= originalDetail.Quantity;
+                                }
+
+                                    stockPart.InStockQty -= updatedDetail.Quantity;
                             }
                             else {
-                                stockPart.InOrderQty += updatedDetail.Quantity - originalDetail.Quantity;
+
+                                if (orderPart.OrderStatus >= _inOrderStockAllocationStatus) {
+
+                                    if (orderPart.OriginalStatus < _inOrderStockAllocationStatus) {
+                                        //previously not allocated but now allocated
+                                        stockPart.InOrderQty += updatedDetail.Quantity;
+                                    }
+                                    else {
+                                        //some prevsiously allocated, now allocate the diff
+                                        stockPart.InOrderQty += updatedDetail.Quantity - originalDetail.Quantity;
+                                    }
+                                }
+                                else {
+
+                                    //deallocate previously allocated stock
+                                    if (orderPart.OriginalStatus >= _inOrderStockAllocationStatus) {
+                                        stockPart.InOrderQty -= originalDetail.Quantity;
+                                    }
+  
+                              }
+
                             }
                         }
                         else {
                             stockPart.InStockQty += originalDetail.Quantity;
                             if (orderPart.OrderStatus != OrderStatus.Canceled) {
-                                stockPart.InOrderQty += updatedDetail.Quantity;
+
+                                if (orderPart.OrderStatus >= _inOrderStockAllocationStatus) {
+                                    stockPart.InOrderQty += updatedDetail.Quantity;
+                                }
+                                
                             }
                         }
                     }
