@@ -16,8 +16,14 @@
             @Html.LabelFor(m => m.InStockQty, T("In stock Qty."))
             @Html.TextBoxFor(m => m.InStockQty, new { @class = "text small" })
             <span class="hint">@T("{0} in order.", Model.InOrderQty)</span>
+            <span class="hint">@T("{0} available.", Model.AvailableQty)</span>
             @Html.ValidationMessageFor(m => m.InStockQty, "*")
         </div>
+       @* <div>
+        @Html.LabelFor(m => m.InOrderQty, T("In Order Qty."))
+        @Html.TextBoxFor(m => m.InOrderQty, new { @class = "text small" })
+        @Html.ValidationMessageFor(m => m.InOrderQty, "*")
+    </div>*@
         <div>
             @Html.LabelFor(m => m.AlertQty, T("Alert Qty."))
             @Html.TextBoxFor(m => m.AlertQty, new { @class = "text small" })
