@@ -1,14 +1,17 @@
 ﻿using Orchard.Data;
 using OShop.Models;
 using System;
+using Orchard.ContentManagement;
 
 namespace OShop.Services {
     public class PaymentService : IPaymentService {
         private readonly IRepository<PaymentTransactionRecord> _transactionRepository;
-
+        private readonly IOrdersService _orderService;
         public PaymentService(
-            IRepository<PaymentTransactionRecord> transactionRepository) {
+            IRepository<PaymentTransactionRecord> transactionRepository,
+            IOrdersService orderService) {
             _transactionRepository = transactionRepository;
+            _orderService = orderService;
         }
 
         public PaymentTransactionRecord GetTransaction(int Id) {
@@ -30,7 +33,18 @@ namespace OShop.Services {
             if (Transaction == null) {
                 throw new ArgumentNullException("Transaction", "Transaction cannot be null.");
             }
+
             _transactionRepository.Update(Transaction);
+
+            var order = _orderService.GetOrderById(Transaction.PaymentPartRecord.ContentItemRecord.Id);
+            var paymentStatus = order.As<PaymentPart>().Status;
+
+            if(Transaction.Status == TransactionStatus.Validated && paymentStatus == PaymentStatus.Completed){
+                order.OrderStatus = OrderStatus.Processing;
+            }
+
+         
+
         }
     }
 }
