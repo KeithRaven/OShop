@@ -31,6 +31,7 @@ namespace OShop.Handlers {
         }
 
         public void OrderProcessing(IContent order) {
+            _workflowManager.TriggerEvent(OrderProcessingActivity.EventName, order, () => new Dictionary<string, object> { { "Content", order } });
         }
 
         public void OrderDetailDeleted(IContent order, OrderDetailRecord deletedDetail) {
