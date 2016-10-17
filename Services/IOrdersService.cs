@@ -12,6 +12,7 @@ namespace OShop.Services {
         void CreateOrder(IContent order);
         String BuildOrderReference();
         OrderPart GetOrderByReference(string Refrence);
+        OrderPart GetOrderById(int id);
         IEnumerable<OrderPart> GetMyOrders();
         IEnumerable<OrderPart> GetOrdersByOwner(Int32 UserId);
     }

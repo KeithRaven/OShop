@@ -45,6 +45,12 @@ namespace OShop.Services {
                 .FirstOrDefault();
         }
 
+        public OrderPart GetOrderById(int id) {
+            return _contentManager.Query<OrderPart, OrderPartRecord>()
+                .Where(o => o.Id == id).Slice(1)
+                .FirstOrDefault();
+        }
+
         public IEnumerable<OrderPart> GetMyOrders() {
             var user = _authenticationService.GetAuthenticatedUser();
 
