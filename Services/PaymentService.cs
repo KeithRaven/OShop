@@ -1,17 +1,29 @@
-﻿using Orchard.Data;
+﻿using Orchard;
+using Orchard.Data;
 using OShop.Models;
 using System;
 using Orchard.ContentManagement;
+using Orchard.Localization;
+using Orchard.ContentManagement.Handlers;
+using System.Collections.Generic;
+using Orchard.Logging;
 
 namespace OShop.Services {
-    public class PaymentService : IPaymentService {
+    public class PaymentService : IPaymentService
+    {
         private readonly IRepository<PaymentTransactionRecord> _transactionRepository;
         private readonly IOrdersService _orderService;
+        private readonly Lazy<IEnumerable<IContentHandler>> _handlers;
+        public ILogger Logger { get; set; }
         public PaymentService(
             IRepository<PaymentTransactionRecord> transactionRepository,
-            IOrdersService orderService) {
+            IOrdersService orderService,
+            Lazy<IEnumerable<IContentHandler>> handlers) {
             _transactionRepository = transactionRepository;
             _orderService = orderService;
+
+            _handlers = handlers;
+            Logger = NullLogger.Instance;
         }
 
         public PaymentTransactionRecord GetTransaction(int Id) {
@@ -40,11 +52,16 @@ namespace OShop.Services {
             var paymentStatus = order.As<PaymentPart>().Status;
 
             if(Transaction.Status == TransactionStatus.Validated && paymentStatus == PaymentStatus.Completed){
+                var context = new UpdateContentContext(order.ContentItem);
+
+                _handlers.Value.Invoke(handler => handler.Updating(context), Logger);
+
                 order.OrderStatus = OrderStatus.Processing;
+
+                _handlers.Value.Invoke(handler => handler.Updated(context), Logger);
             }
 
-         
-
         }
+
     }
 }
