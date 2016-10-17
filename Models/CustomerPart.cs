@@ -36,7 +36,7 @@ namespace OShop.Models {
 
         [EmailAddress]
         public String Email {
-            get { return this.User != null ? this.User.Email : this.Retrieve(x => x.Email); }
+            get { return (this.User != null && !string.IsNullOrEmpty(this.User.Email)) ? this.User.Email : this.Retrieve(x => x.Email); }
             set { this.Store(x => x.Email, value); }
         }
 
