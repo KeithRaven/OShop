@@ -12,5 +12,6 @@ namespace OShop.Models {
         public virtual String LastName { get; set; }
         public virtual String Email { get; set; }
         public virtual Int32 DefaultAddressId { get; set; }
+        public virtual String Telephone { get; set; }
     }
 }

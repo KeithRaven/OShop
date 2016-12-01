@@ -66,5 +66,14 @@ namespace OShop.Migrations {
             return 1;
         }
 
+        public int UpdateFrom1() {
+
+            SchemaBuilder.AlterTable("CustomerPartRecord", table => table
+                .AddColumn<string>("Telephone")
+            );
+
+            return 2;
+        }
+
     }
 }

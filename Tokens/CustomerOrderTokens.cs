@@ -22,6 +22,7 @@ namespace OShop.Tokens {
                 .Token("FirstName", T("First name"), T("Customer's first name"))
                 .Token("LastName", T("Last name"), T("Customer's last name"))
                 .Token("Email", T("Email"), T("Customer's e-mail"))
+                .Token("Telephone", T("Telephone"), T("Customer's telephone"))
                 ;
         }
 
@@ -38,6 +39,7 @@ namespace OShop.Tokens {
                 .Chain("LastName", "Text", customer => customer.As<CustomerPart>().LastName)
                 .Token("Email", customer => customer.As<CustomerPart>().Email)
                 .Chain("Email", "Text", customer => customer.As<CustomerPart>().Email)
+                .Token("Telephone", customer => customer.As<CustomerPart>().Telephone)
                 ;
         }
     }

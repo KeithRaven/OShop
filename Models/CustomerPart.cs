@@ -40,6 +40,13 @@ namespace OShop.Models {
             set { this.Store(x => x.Email, value); }
         }
 
+        [Required]
+        public String Telephone
+        {
+            get { return this.Retrieve(x => x.Telephone); }
+            set { this.Store(x => x.Telephone, value); }
+        }
+
         public Int32 UserId {
             get { return this.Retrieve(x => x.UserId); }
             set { this.Store(x => x.UserId, value); }

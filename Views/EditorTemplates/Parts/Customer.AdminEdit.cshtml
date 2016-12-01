@@ -22,4 +22,10 @@
             @Html.TextBoxFor(m => m.Email, new { @class = "text medium", @readonly = "readonly" })
         }
     </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Telephone, T("Telephone").Text, new { @class = "required" })
+        @Html.TextBoxFor(m => m.Telephone, new { @class = "text medium form-control" })
+        @Html.ValidationMessageFor(m => m.Telephone, "*")
+    </div>
 </fieldset>

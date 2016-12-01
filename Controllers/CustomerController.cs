@@ -181,6 +181,7 @@ namespace OShop.Controllers
             }
         }
 
+        [Themed]
         [Authorize]
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("submit.Save")]
