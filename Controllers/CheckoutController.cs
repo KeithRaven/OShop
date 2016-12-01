@@ -58,9 +58,7 @@ namespace OShop.Controllers
             if (customer == null) {
                 return RedirectToAction("Create", "Customer", new { area = "OShop", ReturnUrl = Url.Action("Index", "Checkout", new { area = "OShop" }) });
             }
-            else if(!string.Equals(Request.UrlReferrer.LocalPath, Url.Action("Edit", "Customer"), StringComparison.OrdinalIgnoreCase)){
-                return RedirectToAction("Edit", "Customer", new { area = "OShop", ReturnUrl = Url.Action("Index", "Checkout", new { area = "OShop" }) });
-            }
+           
 
             if (!_shoppingCartService.ListItems().Any()) {
                 // Cart is empty => Return to Shopping cart
